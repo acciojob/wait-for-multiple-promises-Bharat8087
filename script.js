@@ -4,6 +4,11 @@ function createPromise() {
         setTimeout(() => resolve(time / 1000), time); 
     });
 }
+const promises = [
+    createPromise('Promise 1'),
+    createPromise('Promise 2'),
+    createPromise('Promise 3')
+];
 
 let promises = [createPromise(), createPromise(), createPromise()];
 
