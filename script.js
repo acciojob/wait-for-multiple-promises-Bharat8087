@@ -1,14 +1,9 @@
 function createPromise() {
     return new Promise((resolve, reject) => {
-        let time = Math.random() * 2000 + 1000; 
-        setTimeout(() => resolve(time / 1000), time); 
+        let time = Math.random() * 2000 + 1000;
+        setTimeout(() => resolve(time / 1000), time);
     });
 }
-const promises = [
-    createPromise('Promise 1'),
-    createPromise('Promise 2'),
-    createPromise('Promise 3')
-];
 
 let promises = [createPromise(), createPromise(), createPromise()];
 
@@ -24,11 +19,11 @@ Promise.all(promises)
         document.getElementById('tableBody').removeChild(loadingRow);
 
         let tableBody = document.getElementById('tableBody');
-        tableBody.innerHTML = ''; 
+        tableBody.innerHTML = '';
 
         let totalTime = 0;
         times.forEach((time, index) => {
-            totalTime += time; 
+            totalTime += time;
             let row = document.createElement('tr');
             let promiseCell = document.createElement('td');
             let timeCell = document.createElement('td');
