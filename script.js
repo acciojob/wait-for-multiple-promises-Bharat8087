@@ -1,55 +1,28 @@
 //your JS code here. If required.
-function getRandomDelay() {
-    return Math.floor(Math.random() * 2000) + 1000;
-}
-
-function createPromise(id) {
-    return new Promise(resolve => {
-        const delay = getRandomDelay();
-        setTimeout(() => {
-            resolve({ id, time: delay / 1000 });
-        }, delay);
+function createPromise() {
+    return new Promise((resolve, reject) => {
+        let time = Math.random() * 2000 + 1000; 
+        setTimeout(() => resolve(time / 1000), time); 
     });
 }
+let promises = [createPromise(), createPromise(), createPromise()];
 
-const promises = [
-    createPromise('Promise 1'),
-    createPromise('Promise 2'),
-    createPromise('Promise 3')
-];
+Promise.all(promises).then((times) => {
+});
+Promise.all(promises).then((times) => {
+    let tableBody = document.getElementById('tableBody');
+    tableBody.innerHTML = ''; // Clear existing table content
 
-const loadingRow = document.createElement('tr');
-const loadingCell = document.createElement('td');
-loadingCell.setAttribute('colspan', '2');
-loadingCell.textContent = 'Loading...';
-loadingRow.appendChild(loadingCell);
-document.getElementById('tableBody').appendChild(loadingRow);
+    times.forEach((time, index) => {
+        let row = document.createElement('tr');
+        let promiseCell = document.createElement('td');
+        let timeCell = document.createElement('td');
 
-Promise.all(promises)
-    .then(results => {
-        document.getElementById('tableBody').removeChild(loadingRow);
+        promiseCell.textContent = 'Promise ' + (index + 1);
+        timeCell.textContent = time.toFixed(3) + 's';
 
-        results.forEach(result => {
-            const row = document.createElement('tr');
-            const idCell = document.createElement('td');
-            const timeCell = document.createElement('td');
-            idCell.textContent = result.id;
-            timeCell.textContent = result.time.toFixed(3);
-            row.appendChild(idCell);
-            row.appendChild(timeCell);
-            document.getElementById('tableBody').appendChild(row);
-        });
-
-        const totalTime = results.reduce((acc, cur) => acc + cur.time, 0);
-        const totalRow = document.createElement('tr');
-        const totalIdCell = document.createElement('td');
-        const totalTimeCell = document.createElement('td');
-        totalIdCell.textContent = 'Total';
-        totalTimeCell.textContent = totalTime.toFixed(3);
-        totalRow.appendChild(totalIdCell);
-        totalRow.appendChild(totalTimeCell);
-        document.getElementById('tableBody').appendChild(totalRow);
-    })
-    .catch(error => {
-        console.error('An error occurred:', error);
+        row.appendChild(promiseCell);
+        row.appendChild(timeCell);
+        tableBody.appendChild(row);
     });
+});
