@@ -17,7 +17,7 @@
           <th>Promise Name</th>
           <th>Time taken (s)</th>
         </tr>
-        <tr id="loadingRow">
+        <tr id="loading">
           <td colspan="2">Loading...</td>
         </tr>
       </thead>
@@ -39,11 +39,11 @@
         createPromise(1, 3)
       ];
 
-      const loadingRow = document.getElementById('loadingRow');
+      const loading = document.getElementById('loading');
 
       Promise.all(promises)
         .then((results) => {
-          loadingRow.parentNode.removeChild(loadingRow);
+          loading.parentNode.removeChild(loading);
 
           results.forEach((time, index) => {
             const row = document.createElement('tr');
