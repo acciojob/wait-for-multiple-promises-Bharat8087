@@ -1,4 +1,4 @@
- function createPromise(min, max) {
+ /*function createPromise(min, max) {
         const randomTime = Math.floor(Math.random() * (max - min + 1)) + min;
         return new Promise((resolve) => {
           setTimeout(() => {
@@ -42,4 +42,4 @@
         })
         .catch((error) => {
           console.error('Error occurred:', error);
-        });
+        });*/
