@@ -1,47 +1,50 @@
-function getRandomDelay() {
-            return Math.floor(Math.random() * 3000) + 1000;
-        }
+function createPromise(min, max) {
+  const randomTime = Math.floor(Math.random() * (max - min + 1)) + min;
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(randomTime);
+    }, randomTime * 1000);
+  });
+}
 
-        function createPromise(index) {
-            const delay = getRandomDelay();
-            return new Promise(resolve => {
-                setTimeout(() => {
-                    resolve({ index, timeTaken: delay / 1000 });
-                }, delay);
-            });
-        }
+const promises = [
+  createPromise(1, 3),
+  createPromise(1, 3),
+  createPromise(1, 3)
+];
 
-        const promises = [];
+const loadingRow = document.createElement('tr');
+const loadingCell = document.createElement('td');
+loadingCell.colSpan = 2;
+loadingCell.textContent = 'Loading...';
+loadingRow.appendChild(loadingCell);
+document.getElementById('tableBody').appendChild(loadingRow);
 
-        for (let i = 1; i <= 3; i++) {
-            promises.push(createPromise(i));
-        }
+Promise.all(promises)
+  .then((results) => {
+    document.getElementById('tableBody').removeChild(loadingRow);
 
-        document.addEventListener('DOMContentLoaded', () => {
-            Promise.all(promises)
-                .then(results => {
-                    const loadingRow = document.getElementById('loadingRow');
-                    loadingRow.parentNode.removeChild(loadingRow);
+    results.forEach((time, index) => {
+      const row = document.createElement('tr');
+      const promiseCell = document.createElement('td');
+      const timeCell = document.createElement('td');
+      promiseCell.textContent = `Promise ${index + 1}`;
+      timeCell.textContent = `${time} s`;
+      row.appendChild(promiseCell);
+      row.appendChild(timeCell);
+      document.getElementById('tableBody').appendChild(row);
+    });
 
-                    results.forEach(result => {
-                        const row = document.createElement('tr');
-                        const promiseCell = document.createElement('td');
-                        promiseCell.textContent = `Promise ${result.index}`;
-                        row.appendChild(promiseCell);
-                        const timeCell = document.createElement('td');
-                        timeCell.textContent = result.timeTaken.toFixed(3);
-                        row.appendChild(timeCell);
-                        document.querySelector('table').appendChild(row);
-                    });
-
-                    const totalTime = results.reduce((acc, curr) => acc + curr.timeTaken, 0);
-                    const totalRow = document.createElement('tr');
-                    const totalCell = document.createElement('td');
-                    totalCell.textContent = 'Total';
-                    totalRow.appendChild(totalCell);
-                    const totalTimeCell = document.createElement('td');
-                    totalTimeCell.textContent = totalTime.toFixed(3);
-                    totalRow.appendChild(totalTimeCell);
-                    document.querySelector('table').appendChild(totalRow);
-                });
-        });
+    const totalTime = results.reduce((acc, curr) => acc + curr, 0);
+    const totalRow = document.createElement('tr');
+    const totalCell = document.createElement('td');
+    const totalTimeCell = document.createElement('td');
+    totalCell.textContent = 'Total';
+    totalTimeCell.textContent = `${totalTime.toFixed(3)} s`;
+    totalRow.appendChild(totalCell);
+    totalRow.appendChild(totalTimeCell);
+    document.getElementById('tableBody').appendChild(totalRow);
+  })
+  .catch((error) => {
+    console.error('Error occurred:', error);
+  });
